@@ -12,7 +12,31 @@
 CHIP Mux {
     IN a, b, sel;
     OUT out;
+    /*
+    a And Not(b) And Not(sel)
+    OR
+    a And b and Not(sel)
+    OR
+    a And b And sel
+    */
 
     PARTS:
-    // Put your code here:
+   Not(in=b, out=notb);
+   Not(in=sel, out=notsel);
+   And(a=a, b=notb, out=aandnotb);
+   And(a=aandnotb, b=notsel, out=aandnotbandnotsel);
+   
+   And(a=a, b=b, out=aandb);
+   And(a=aandb, b=notsel, out=aandbandnotsel);
+
+    Not(in=a, out=nota);
+    And(a=nota, b =b, out=notaandb);
+    And(a=notaandb,b=sel , out=notaandbandc);
+
+    And(a=aandb , b=sel , out=aandbandc);
+
+   Or(a=aandnotbandnotsel, b=aandbandnotsel, out=w1);
+   Or(a=w1, b=notaandbandc, out=w2);
+   Or(a=w2, b=aandbandc, out=out);
+
 }
